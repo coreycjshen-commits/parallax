@@ -16,12 +16,24 @@ export default function Home() {
     setLoading(true);
     setError(null);
     try {
+      const headers: Record<string, string> = { "content-type": "application/json" };
+      // Force (Regenerate) is gated server-side by a shared secret. The owner enters
+      // it once; we keep it in localStorage so it never ships in the JS bundle.
+      if (force) {
+        let secret = localStorage.getItem("parallax_secret") ?? "";
+        if (!secret) {
+          secret = window.prompt("Enter the regenerate secret (GENERATE_SECRET):") ?? "";
+          if (secret) localStorage.setItem("parallax_secret", secret);
+        }
+        if (secret) headers["x-parallax-secret"] = secret;
+      }
       const res = await fetch("/api/briefings/generate", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers,
         body: JSON.stringify({ category, force }),
       });
       const data = await res.json();
+      if (res.status === 401) localStorage.removeItem("parallax_secret");
       if (!res.ok) throw new Error(data.error ?? "failed");
       setBriefing(data.briefing);
       setCached(Boolean(data.cached));

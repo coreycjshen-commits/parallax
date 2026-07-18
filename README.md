@@ -29,6 +29,7 @@ User picks a category tab and clicks "Generate Today's Briefing" → the server 
 | `GROQ_MODEL` | Optional. Groq model id; defaults to `llama-3.3-70b-versatile`. Verify against Groq's live model list and override if deprecated. |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL (Project Settings → API) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (Project Settings → API). Server-side only; grants full DB access — keep secret. |
+| `GENERATE_SECRET` | Optional. Shared secret gating the Regenerate (force) path so a public deploy can't run up Groq usage. Normal generation is bounded by the same-day cache (≤1 Groq call per category per day); only force bypasses it. If unset, force is allowed without a secret. The UI prompts for it once and stores it locally. |
 
 ## Commands
 

@@ -8,11 +8,24 @@ import { toISODate } from "@/lib/dates";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+// Normal generation is cost-bounded by the same-day cache (at most one Groq call
+// per category per day). Only `force` bypasses the cache, so only `force` is gated
+// behind a shared secret. If GENERATE_SECRET is unset (e.g. local dev), force is
+// allowed without a header.
+function forceAllowed(req: Request): boolean {
+  const secret = process.env.GENERATE_SECRET;
+  if (!secret) return true;
+  return req.headers.get("x-parallax-secret") === secret;
+}
+
 export async function POST(req: Request) {
   try {
     const { category, force } = await req.json();
     if (!isCategory(category)) {
       return NextResponse.json({ error: "invalid category" }, { status: 400 });
+    }
+    if (force && !forceAllowed(req)) {
+      return NextResponse.json({ error: "forbidden: regenerate requires the secret" }, { status: 401 });
     }
     const date = toISODate(new Date());
 
