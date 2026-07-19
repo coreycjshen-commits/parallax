@@ -85,7 +85,9 @@ export default function Home() {
       {loading && <div className="glass rounded-xl p-6 text-slate-300">Fetching feeds and comparing framings…</div>}
 
       <div className="space-y-6">
-        {briefing?.content.stories.map((s, i) => <StoryCard key={i} story={s} />)}
+        {briefing?.content.stories.map((s, i) => (
+          <StoryCard key={i} story={s} category={briefing.category} date={briefing.briefing_date} />
+        ))}
       </div>
     </main>
   );

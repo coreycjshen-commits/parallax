@@ -21,6 +21,7 @@ export function isCategory(s: string): s is Category {
 }
 
 export interface FeedItem {
+  id?: string;       // stable ref within a briefing, e.g. "W3" (bucket letter + index)
   source: string;    // e.g. "BBC"
   bucket: BucketId;
   title: string;
@@ -33,6 +34,7 @@ export interface Framing {
   bucket: string;    // human label, e.g. "Russian state media"
   sources: string[];
   summary: string;
+  refs?: string[];   // FeedItem ids this framing drew from (for deep dives)
 }
 
 export interface Story {
@@ -51,4 +53,24 @@ export interface Briefing {
   content: BriefingContent;
   raw_source_count: number;
   created_at?: string;
+  sources?: FeedItem[];  // raw items behind the briefing, kept for deep dives
+}
+
+// ---- Deep dive (on-demand richer analysis of a single story) ----
+
+/** One bucket's grounded, expanded framing for a deep dive. */
+export interface DeepFraming {
+  bucket: string;          // human label
+  sources: string[];
+  whatReported: string;    // grounded in article text — specific claims, names, numbers
+  howFramed: string;       // grounded — emphasis, word choice, structure
+  omissions: string[];     // notable absences vs. what other buckets included
+}
+
+/** Full deep-dive result for one story. */
+export interface DeepDive {
+  framings: DeepFraming[];
+  whyDiverge: string;      // INTERPRETIVE (labeled) — motivations/incentives behind the framings
+  verifiable: string;      // what is cross-confirmed across buckets
+  contested: string;       // what is disputed or single-sourced
 }

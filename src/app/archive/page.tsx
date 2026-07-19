@@ -55,7 +55,9 @@ export default async function ArchivePage({
               </div>
               {isOpen && (
                 <div className="mt-4 space-y-4">
-                  {b.content.stories.map((s, i) => <StoryCard key={i} story={s} />)}
+                  {b.content.stories.map((s, i) => (
+                    <StoryCard key={i} story={s} category={b.category} date={b.briefing_date} />
+                  ))}
                 </div>
               )}
             </li>

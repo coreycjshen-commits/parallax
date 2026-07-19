@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Briefing, BriefingContent, Category } from "@/lib/types";
+import type { Briefing, BriefingContent, Category, DeepDive, FeedItem } from "@/lib/types";
 
 interface Row {
   category: string;
@@ -7,6 +7,7 @@ interface Row {
   content: BriefingContent;
   raw_source_count: number | null;
   created_at?: string;
+  sources?: FeedItem[] | null;
 }
 
 export function rowToBriefing(row: Row): Briefing {
@@ -16,6 +17,7 @@ export function rowToBriefing(row: Row): Briefing {
     content: row.content,
     raw_source_count: row.raw_source_count ?? 0,
     created_at: row.created_at,
+    sources: row.sources ?? [],
   };
 }
 
@@ -46,8 +48,40 @@ export async function saveBriefing(b: Briefing): Promise<void> {
         briefing_date: b.briefing_date,
         content: b.content,
         raw_source_count: b.raw_source_count,
+        sources: b.sources ?? [],
       },
       { onConflict: "category,briefing_date" },
+    );
+  if (error) throw error;
+}
+
+export async function getDeepDive(
+  category: Category,
+  date: string,
+  storyKey: string,
+): Promise<DeepDive | null> {
+  const { data, error } = await client()
+    .from("deep_dives")
+    .select("content")
+    .eq("category", category)
+    .eq("briefing_date", date)
+    .eq("story_key", storyKey)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? (data.content as DeepDive) : null;
+}
+
+export async function saveDeepDive(
+  category: Category,
+  date: string,
+  storyKey: string,
+  content: DeepDive,
+): Promise<void> {
+  const { error } = await client()
+    .from("deep_dives")
+    .upsert(
+      { category, briefing_date: date, story_key: storyKey, content },
+      { onConflict: "category,briefing_date,story_key" },
     );
   if (error) throw error;
 }
