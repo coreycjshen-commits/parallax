@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       briefing_date: date,
       content,
       raw_source_count: items.length,
+      sources: items,
     };
     await saveBriefing(briefing);
     return NextResponse.json({ briefing, cached: false });
