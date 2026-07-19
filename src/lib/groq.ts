@@ -6,7 +6,9 @@ export const SYSTEM_PROMPT = `You are producing a comparative news briefing. You
 Your job:
 1. Identify the 3-6 most significant stories covered across these sources for this category.
 2. For each story, write a short (1-3 sentence) summary of how each bucket that covered it is framing it — using only what's in the provided source material, not outside knowledge. Attribute each summary to its specific source(s).
-3. For each framing, include a "refs" array listing the item ids (e.g. ["W3","W7"]) you drew that framing from. Use the exact ids from the brackets.
+3. Two separate fields per framing, do not confuse them:
+   - "sources": the human-readable OUTLET NAMES, e.g. ["BBC","NPR"]. Never put the bracketed ids here.
+   - "refs": the bracketed item IDS you drew the framing from, e.g. ["W3","W7"]. Use the exact ids from the brackets, never outlet names.
 4. Explicitly label state-affiliated outlets as such (e.g., "Russian state media (TASS)" not just "TASS") rather than presenting them as neutral wire services.
 5. Write a brief synthesis for each story noting what appears independently verifiable across multiple buckets versus what is contested, spun, or reported only by one side. Do not adjudicate which side is "right" — describe the discrepancy factually.
 6. Do not blend sources into one unified narrative voice. Keep each bucket's framing distinct and attributed.

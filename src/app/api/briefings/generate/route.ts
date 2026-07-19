@@ -41,6 +41,22 @@ export async function POST(req: Request) {
     const digest = buildBucketDigest(items);
     const content = await generateBriefing(category, digest);
 
+    // Normalize each framing's displayed sources to real outlet names. The model
+    // sometimes puts item ids (e.g. "W3") in `sources`; when refs exist, derive the
+    // outlet names from them so the quick view never shows raw ids.
+    const sourceById = new Map(items.filter((i) => i.id).map((i) => [i.id as string, i.source]));
+    const isId = (s: string) => /^[WCRM]\d+$/.test(s);
+    for (const story of content.stories) {
+      for (const f of story.framings) {
+        const fromRefs = (f.refs ?? []).map((r) => sourceById.get(r)).filter((x): x is string => Boolean(x));
+        if (fromRefs.length > 0) {
+          f.sources = [...new Set(fromRefs)];
+        } else if (Array.isArray(f.sources)) {
+          f.sources = f.sources.filter((s) => !isId(s)); // drop stray ids if no refs to remap
+        }
+      }
+    }
+
     const briefing: Briefing = {
       category,
       briefing_date: date,
