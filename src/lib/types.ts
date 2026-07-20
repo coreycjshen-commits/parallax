@@ -58,12 +58,19 @@ export interface Briefing {
 
 // ---- Deep dive (on-demand richer analysis of a single story) ----
 
+/** A telling word choice quoted verbatim from an outlet's text. */
+export interface FramingLabel {
+  term: string;            // the exact word/phrase the outlet used
+  forWhat: string;         // what it refers to
+}
+
 /** One bucket's grounded, expanded framing for a deep dive. */
 export interface DeepFraming {
   bucket: string;          // human label
   sources: string[];
   whatReported: string;    // grounded in article text — specific claims, names, numbers
-  howFramed: string;       // grounded — emphasis, word choice, structure
+  howFramed: string;       // grounded — emphasis, word choice, structure, with quoted phrases
+  labels?: FramingLabel[]; // telling verbatim word choices
   omissions: string[];     // notable absences vs. what other buckets included
 }
 

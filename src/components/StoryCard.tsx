@@ -75,6 +75,19 @@ export default function StoryCard({
                 <div>
                   <div className="label-mono mb-1 text-slate-500">How they framed it</div>
                   <p className="text-sm leading-relaxed text-slate-200">{f.howFramed}</p>
+                  {f.labels && f.labels.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {f.labels.map((l, k) => (
+                        <span
+                          key={k}
+                          className="label-mono rounded border border-white/10 bg-white/5 px-2 py-1 text-slate-300"
+                          title={l.forWhat}
+                        >
+                          &ldquo;{l.term}&rdquo; <span className="text-slate-500">→ {l.forWhat}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 {f.omissions?.length > 0 && (
                   <div>

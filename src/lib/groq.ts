@@ -25,21 +25,23 @@ Produce a rich, specific analysis — not vague generalities. Ground every factu
 
 For each bucket that covered the story, provide:
 - "whatReported": the substance THIS bucket reported — specific facts, figures, named actors, claimed sequence of events. 3-5 sentences. Grounded strictly in the article text.
-- "howFramed": HOW this bucket framed it — what it foregrounds vs. downplays, notable word choices/loaded language, whose perspective it centers, what it treats as established vs. alleged. 2-4 sentences. Grounded in observable choices in the text.
+- "howFramed": HOW this bucket framed it, backed by EVIDENCE FROM THE TEXT. You MUST quote at least two short verbatim phrases from this bucket's articles (put them in "double quotes") that reveal the framing — e.g. the exact label used for an actor or event ("terrorists" vs "fighters" vs "martyrs" vs "operation" vs "aggression"), a loaded verb or adjective, who is cast as aggressor vs victim, active vs passive voice ("Israeli forces killed" vs "was killed in clashes"), and what is stated as fact vs "alleged"/"claimed". Name what is foregrounded in the lede vs buried. 3-5 sentences, every claim tied to a quoted phrase or a concrete textual choice.
+- "labels": an array of 1-4 objects {"term":"the exact word/phrase this outlet used","forWhat":"what it refers to"} capturing the most telling word choices. Use only phrases actually present in this bucket's text.
 - "omissions": an array of specific things this bucket notably left out or glossed, especially facts that OTHER buckets included. Concrete, not generic.
 
 Then across all buckets:
-- "whyDiverge": INTERPRETIVE analysis of why the framings differ — the outlets' likely incentives, target audience, and state/ideological alignment. This is analysis and may use general knowledge of these outlets; keep it factual and non-partisan, describing incentives, not passing moral judgment.
+- "whyDiverge": INTERPRETIVE analysis of why the framings differ — the outlets' likely incentives, target audience, and state/ideological alignment. Tie it back to the specific word choices/omissions you found. This is analysis and may use general knowledge of these outlets; keep it factual and non-partisan, describing incentives, not passing moral judgment.
 - "verifiable": what is independently corroborated across two or more buckets (the facts a reader can treat as solid).
 - "contested": what is disputed, spun, single-sourced, or claimed by only one side.
 
 Rules:
 - Never blend the buckets into one voice. Keep each bucket distinct and attributed.
 - Label state media as state media.
-- Be concrete and specific everywhere; avoid filler like "provides a different narrative" without saying HOW.
+- Every framing claim must be backed by a quoted phrase or a concrete, named textual choice. NO vague filler — BANNED phrases include "the language is neutral", "emphasizes the X perspective", "provides a different narrative", "focuses on the facts". If you catch yourself writing one, replace it with a specific quote or observation.
+- If the article text for a bucket is too thin to quote (e.g. only a snippet was available), say so explicitly rather than inventing analysis.
 
 Output ONLY valid JSON of this exact shape, no text outside the JSON object:
-{"framings":[{"bucket":"string","sources":["string"],"whatReported":"string","howFramed":"string","omissions":["string"]}],"whyDiverge":"string","verifiable":"string","contested":"string"}`;
+{"framings":[{"bucket":"string","sources":["string"],"whatReported":"string","howFramed":"string","labels":[{"term":"string","forWhat":"string"}],"omissions":["string"]}],"whyDiverge":"string","verifiable":"string","contested":"string"}`;
 
 const DEFAULT_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
