@@ -74,9 +74,22 @@ export interface DeepFraming {
   omissions: string[];     // notable absences vs. what other buckets included
 }
 
+/** How one bucket named a shared subject (verbatim). */
+export interface ContrastTerm {
+  bucket: string;
+  term: string;
+}
+
+/** The same actor/event, and the different word each bucket used for it. */
+export interface Contrast {
+  subject: string;         // neutral description of the shared actor/event
+  terms: ContrastTerm[];   // per-bucket verbatim naming
+}
+
 /** Full deep-dive result for one story. */
 export interface DeepDive {
   framings: DeepFraming[];
+  contrasts?: Contrast[];  // same subject, divergent naming across buckets
   whyDiverge: string;      // INTERPRETIVE (labeled) — motivations/incentives behind the framings
   verifiable: string;      // what is cross-confirmed across buckets
   contested: string;       // what is disputed or single-sourced

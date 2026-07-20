@@ -33,6 +33,7 @@ Then across all buckets:
 - "whyDiverge": INTERPRETIVE analysis of why the framings differ — the outlets' likely incentives, target audience, and state/ideological alignment. Tie it back to the specific word choices/omissions you found. This is analysis and may use general knowledge of these outlets; keep it factual and non-partisan, describing incentives, not passing moral judgment.
 - "verifiable": what is independently corroborated across two or more buckets (the facts a reader can treat as solid).
 - "contested": what is disputed, spun, single-sourced, or claimed by only one side.
+- "contrasts": THE KEY OUTPUT. An array of 2-5 objects, each about ONE actor, group, place, or event that MORE THAN ONE bucket referred to, showing the DIFFERENT word/phrase each bucket used for that same thing. Shape per item: {"subject":"neutral plain-language description of the shared actor/event, e.g. 'the people who carried out the attack'","terms":[{"bucket":"the bucket label","term":"the exact verbatim word/phrase that bucket used for it"}]}. Rules for contrasts: only include a bucket if its text actually used a term for that subject; use the outlet's OWN words verbatim; prioritize the subjects where naming diverges MOST across buckets (classic examples: "militants" vs "fighters" vs "martyrs"; "strike" vs "aggression" vs "operation"; "regime" vs "government"; "killed" vs "martyred" vs "died"). If every bucket happened to use the same term, you may skip that subject in favor of ones that diverge. Aim to surface the sharpest naming divergences in the coverage.
 
 Rules:
 - Never blend the buckets into one voice. Keep each bucket distinct and attributed.
@@ -41,7 +42,7 @@ Rules:
 - If the article text for a bucket is too thin to quote (e.g. only a snippet was available), say so explicitly rather than inventing analysis.
 
 Output ONLY valid JSON of this exact shape, no text outside the JSON object:
-{"framings":[{"bucket":"string","sources":["string"],"whatReported":"string","howFramed":"string","labels":[{"term":"string","forWhat":"string"}],"omissions":["string"]}],"whyDiverge":"string","verifiable":"string","contested":"string"}`;
+{"framings":[{"bucket":"string","sources":["string"],"whatReported":"string","howFramed":"string","labels":[{"term":"string","forWhat":"string"}],"omissions":["string"]}],"contrasts":[{"subject":"string","terms":[{"bucket":"string","term":"string"}]}],"whyDiverge":"string","verifiable":"string","contested":"string"}`;
 
 const DEFAULT_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
@@ -104,6 +105,7 @@ export function parseDeepDive(raw: string): DeepDive {
   if (!obj || !Array.isArray(obj.framings)) throw new Error("Malformed deep dive: missing framings[]");
   return {
     framings: obj.framings,
+    contrasts: obj.contrasts ?? [],
     whyDiverge: obj.whyDiverge ?? "",
     verifiable: obj.verifiable ?? "",
     contested: obj.contested ?? "",

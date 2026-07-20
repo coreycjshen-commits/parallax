@@ -101,6 +101,30 @@ export default function StoryCard({
             </div>
           ))}
 
+          {/* Contrasts — the same subject, named differently by each bucket */}
+          {deep.contrasts && deep.contrasts.length > 0 && (
+            <div className="glass-2 rounded-xl p-4">
+              <div className="label-mono mb-3 text-slate-400">Same subject · different words</div>
+              <div className="space-y-3">
+                {deep.contrasts.map((c, i) => (
+                  <div key={i} className="border-l border-white/10 pl-3">
+                    <div className="mb-1.5 text-sm text-slate-400">{c.subject}</div>
+                    <div className="flex flex-wrap gap-2">
+                      {c.terms.map((t, j) => (
+                        <span key={j} className="inline-flex items-center gap-1.5">
+                          <BucketBadge label={t.bucket} />
+                          <span className="text-sm font-medium text-slate-100">
+                            &ldquo;{t.term}&rdquo;
+                          </span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Interpretive layer — clearly labeled as analysis */}
           <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-4">
             <div className="label-mono mb-1.5 text-amber-300/90">
